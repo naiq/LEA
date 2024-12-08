@@ -1,6 +1,6 @@
 # [TMLR2024] LEA: Learning Latent Embedding Alignment Model for fMRI Decoding and Encoding
 
-Xuelin Qian,Yikai Wang, Xinwei Sun, Yanwei Fu, Xiangyang Xue, Jianfeng Feng
+Xuelin Qian, Yikai Wang, Xinwei Sun, Yanwei Fu, Xiangyang Xue, Jianfeng Feng
 
 <p align="center">
 <img src=assets/teaser.jpg />
@@ -126,6 +126,14 @@ We extend our gratitude to the authors for their excellent work and publicly sha
   author={Qian, Xuelin and Wang, Yikai and Fu, Yanwei and Sun, Xinwei and Xue, Xiangyang and Feng, Jianfeng},
   journal={arXiv preprint arXiv:2303.14730},
   year={2023}
+}
+
+@article{qian2024lea,
+title={LEA: Learning Latent Embedding Alignment Model for fMRI Decoding and Encoding},
+author={Xuelin Qian and Yikai Wang and Xinwei Sun and Yanwei Fu and Xiangyang Xue and Jianfeng Feng},
+journal={Transactions on Machine Learning Research},
+year={2024},
+url={https://openreview.net/forum?id=SUMtDJqicd},  
 }
 
 ```
