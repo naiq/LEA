@@ -1,0 +1,87 @@
+# ROOT Settings
+ROOT: 'nerual-decoding/LEA'
+NAME: 'MaskGIT_AE'
+GPU_ID: [0, 1]
+SEED: 666
+Note: 'Placeholder'
+
+
+# DATA Settings
+Data:
+  path: 'dataset/BOLD5000'
+  flip: True
+  center_crop: False
+  image_size: 256
+  patch_size: 16
+  sub: ['CSI1'] # ['CSI1', 'CSI2', 'CSI3', 'CSI4']
+  norm: False # if True, norm to [-1, 1], otherwise [0, 1]
+
+
+# GAN Settings
+Model:
+  # gan
+  resolution: 256
+  norm_mode: 'gn' # ['bn', 'in', 'gn']
+  use_spectral_norm: False # whether to use SpectralNorm
+  in_ch: 3
+  out_ch: 3
+  ch_base: 128 # 128
+  ch_latent: 256 # 256
+  ch_mult: [1, 1, 2, 2, 4]
+  num_res_blocks: 2
+  num_res_mids: 2
+  perceptual_type: 'LPIPS' # 'vgg16', 'vgg19', 'LPIPS'
+  sample_with_conv: False
+  with_tanh: False
+
+  # codebook
+  num_codebook: 1024
+  dim_codebook: 256
+  use_preconv: False
+  use_imagenet_pretrain: False
+  use_maskgit_pretrain: True
+  norm_codebook: False
+
+  # discriminator
+  dis_in_ch: 3
+  dis_ndf: 64
+  dis_num_layers: 2
+
+Loss:
+  perceptual_weight: 0.2 # vgg19:0.2, LPIPS:1.0
+  vgg_weights: [1.0, 1.0, 1.0, 1.0, 1.0]
+
+  code_beta: 0.25 # commitment loss weight
+  code_weight: 1 # codebbok loss weight
+  rec_weight: 1 # reconstruction loss weight
+  # feat_weight: 1 # perceptual loss weight
+  gan_weight: 1 # GAN loss weight
+  gp_weight: 0 # gradient penalty weight
+
+  orth_weight: 0 # orthogonal loss weight
+  orth_max_codes: 128
+
+  gan_loss_type: "hinge" # "non-saturating" # non-saturating or hinge
+
+
+Train:
+  g_lr: 0.00001
+  d_lr: 0.00001
+  beta1: 0.5 # adam optimizer beta1
+  beta2: 0.9 # adam optimizer beta2
+  gamma: 0.5
+  decay_type: 'milestone' # 'constant' # 'milestone'
+  max_iters: 150000
+  drop_steps: 50000
+  num_warmup: 2000
+  batch_size: 4
+
+  restore: False # whether to continue learning
+  pretrain_weight: '' # set '' as None
+
+  log_interval: 100
+  sample_interval: 2000
+  save_interval: 25000
+
+Test:
+  sample_size: 14

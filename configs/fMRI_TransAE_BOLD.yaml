@@ -1,0 +1,75 @@
+# ROOT Settings
+ROOT: 'nerual-decoding/LEA'
+NAME: 'BOLD_AETrans_fMRI2fMRI_Sbj2' 
+GPU_ID: [6]
+SEED: 666
+VQGAN_CFG: 'configs/MaskGIT_AE.yaml'
+VQGAN_MODEL: 'pretrains/MaskGIT_ImageNet256_checkpoint.pth'
+TRANS_MODEL: 'pretrains/BOLD5000/fmri_encoder.pth' 
+
+# DATA Settings
+Data:
+  path: 'dataset/BOLD5000'
+  flip: True
+  center_crop: False
+  image_size: 256
+  
+  patch_size: 32 # 16, 32, 48, 64
+  num_voxel: 1129 # BOLD: 1685 for CSI1, 1129 for CSI2, 1466 for CSI3, 2787 for CSI4
+  roi_patch: [495, 180, 370, 84] # [495, 342, 288, 331, 229], [495, 180, 370, 84], [607, 392, 273, 194], [764, 872, 614, 344, 193]
+
+  sub: ['CSI2'] # ['CSI1', 'CSI2', 'CSI3', 'CSI4']
+  norm: False # if True, norm to [-1, 1], otherwise [0, 1]
+  fmri_drop_rate: 0.25
+
+
+# Transformer Settings
+Model:
+  # - vqgan -
+  resolution: 256
+  patch_size: 16
+
+  # - transformer- 
+  encoder_depth: 24
+  embed_dim: 1024
+
+  decoder_depth: 8
+  decoder_embed_dim: 512
+
+  num_heads: 16
+  drop_rate: 0
+  norm_before: True
+
+  # - CLIP - 
+  clip_name: 'xlm-roberta-large-ViT-H-14'
+  clip_ckpt: 'frozen_laion5b_s13b_b90k'
+  clip_cache: '' # set path if necessary
+  clip_norm: False
+
+Train:
+  lr: 0.000005 # 0.0005
+  beta1: 0.9 # adam optimizer beta1
+  beta2: 0.95 # adam optimizer beta2
+  weight_decay: 0.01
+  gamma: 0.5
+  decay_type: 'linear' # 'constant' # 'milestone', 'linear'
+  max_iters: 120000 
+  drop_steps: 200000
+  num_warmup: 8000
+  batch_size: 8
+  accum_grad: 1
+  grad_clip: 0.1
+  label_smooth: 0 # 0.1
+  loss_all: True
+  cls_weight: 1.0
+
+  restore: False # whether to continue learning
+  pretrain_weight: '' # set '' as None
+
+  log_interval: 100 # step
+  sample_interval: 2000
+  save_interval: 20000 
+
+Test:
+  sample_size: 14
+

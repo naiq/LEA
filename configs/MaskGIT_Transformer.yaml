@@ -1,0 +1,79 @@
+# ROOT Settings
+ROOT: 'nerual-decoding/LEA'
+NAME: 'MaskGIT_Transformer'
+GPU_ID: [0]
+SEED: 666
+VQGAN_CFG: 'configs/MaskGIT_AE.yaml'
+VQGAN_MODEL: 'pretrains/MaskGIT_ImageNet256_checkpoint.pth'
+TRANS_MODEL: 'pretrains/MaskGIT_Trans_ImageNet256_checkpoint.pth'
+
+
+# DATA Settings
+Data:
+  path: 'dataset/BOLD5000'
+  flip: True
+  center_crop: False
+  image_size: 256
+  patch_size: 16
+  num_voxel: 1696 # BOLD: 1696 for CSI1, 1136 for CSI2, 1472 for CSI3, 2800 for CSI4
+  sub: ['CSI1'] # ['CSI1', 'CSI2', 'CSI3', 'CSI4']
+  norm: False # if True, norm to [-1, 1], otherwise [0, 1]
+  fmri_drop_rate: 0.5
+
+
+# Transformer Settings
+Model:
+  # - vqgan -
+  resolution: 256
+  patch_size: 16
+
+  # - transformer- 
+  encoder_depth: 8
+  embed_dim: 512
+
+  decoder_depth: 24
+  decoder_embed_dim: 768
+
+  num_heads: 16
+  drop_rate: 0.01
+  norm_before: True
+
+  # - CLIP - 
+  clip_name: 'xlm-roberta-large-ViT-H-14'
+  clip_ckpt: 'frozen_laion5b_s13b_b90k'
+  clip_cache: ''
+  clip_norm: True
+
+  # - MaskGIT -
+  gamma_mode: 'cosine'
+  min_mask_rate: 0.5
+
+Train:
+  lr: 0.00005
+  beta1: 0.9 # adam optimizer beta1
+  beta2: 0.95 # adam optimizer beta2
+  weight_decay: 0.01
+  gamma: 0.5
+  decay_type: 'linear'
+  max_iters: 300000 
+  drop_steps: 200000
+  num_warmup: 20000
+  batch_size: 8
+  accum_grad: 1
+  grad_clip: 0.0
+  label_smooth: 0.1
+  loss_all: False
+  cls_weight: 1.0
+
+  restore: False # whether to continue learning
+  pretrain_weight: '' # set '' as None
+
+  log_interval: 100
+  sample_interval: 2000
+  save_interval: 20000
+
+Test:
+  sample_size: 14
+  num_steps: 11
+
+

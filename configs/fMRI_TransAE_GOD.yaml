@@ -1,0 +1,80 @@
+# ROOT Settings
+ROOT: 'nerual-decoding/LEA'
+NAME: 'GOD_AETrans_fMRI2fMRI_Sbj2' 
+GPU_ID: [0]
+SEED: 666
+VQGAN_CFG: 'configs/MaskGIT_AE.yaml'
+VQGAN_MODEL: 'pretrains/MaskGIT_ImageNet256_checkpoint.pth'
+TRANS_MODEL: 'pretrains/GOD/fmri_encoder.pth' 
+
+
+# DATA Settings
+Data:
+  path: 'dataset/Kamitani/npz'
+  flip: True
+  center_crop: False
+  image_size: 256
+  
+  patch_size: 32 # 16, 32, 48, 64
+  num_voxel: 4404 # GOD: 4466 for sbj_1, 4404 for sbj_2, 4643 for sbj_3, 4133 for sbj_4, 4370 for sbj_5
+  roi_patch: [757, 727, 603, 416, 372, 124, 576, 829] # sbj1: [1004, 801, 476, 588, 431, 249, 157, 760]
+                                                      # sbj2: [757, 727, 603, 416, 372, 124, 576, 829]
+                                                      # sbj3: [872, 826, 605, 630, 770, 262, 306, 372]
+                                                      # sbj4: [719, 652, 676, 597, 494, 236, 308, 451]
+                                                      # sbj5: [659, 676, 649, 729, 661, 301, 246, 449]
+
+  sub: ['sbj_2'] # ['sbj_1', 'sbj_2', 'sbj_3', 'sbj_4', 'sbj_5']
+  norm: False # if True, norm to [-1, 1], otherwise [0, 1]
+  fmri_drop_rate: 0.25
+
+# Transformer Settings
+Model:
+  # - vqgan -
+  resolution: 256
+  patch_size: 16
+
+  # - transformer- 
+  encoder_depth: 24
+  embed_dim: 1024
+
+  decoder_depth: 8 
+  decoder_embed_dim: 512
+
+  num_heads: 16
+  drop_rate: 0
+  norm_before: True
+
+  # - CLIP - 
+  clip_name: 'xlm-roberta-large-ViT-H-14' 
+  clip_ckpt: 'frozen_laion5b_s13b_b90k'
+  clip_cache: '' # set path if necessary
+  clip_norm: False
+
+Train:
+  lr: 0.00005 # 0.000005
+  beta1: 0.9 # adam optimizer beta1
+  beta2: 0.95 # adam optimizer beta2
+  weight_decay: 0.01
+  gamma: 0.5
+  decay_type: 'linear' # 'constant' # 'milestone', 'linear'
+  max_iters: 100000
+  drop_steps: 200000
+  num_warmup: 8000 
+  batch_size: 8
+  accum_grad: 1
+  grad_clip: 0.1
+  label_smooth: 0 # 0.1
+  loss_all: True # False
+  cls_weight: 1.0
+
+  restore: False # whether to continue learning
+  pretrain_weight: '' # set '' as None
+
+  log_interval: 100 # step
+  sample_interval: 2000
+  save_interval: 20000
+
+Test:
+  sample_size: 14
+
+
