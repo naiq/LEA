@@ -10,7 +10,7 @@ The connection between brain activity and visual stimuli is crucial to understan
 
 ## Framework
 <p align="center">
-<img src=assets/framework />
+<img src=assets/framework.jpg />
 </p>
 - LEA encompasses two distinct encoder-decoder architectures for handling fMRI signals and visual stimuli. 
 - An alignment module is further introduced to facilitate the transformation between the latent representations of fMRI signals and visual stimuli.
