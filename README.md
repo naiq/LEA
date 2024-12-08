@@ -49,7 +49,7 @@ Please download the GOD and BOLD5000 datasets from [MinD-Vis](https://github.com
 ```
 
 ## Chcekpoints Download
-The pre-trained weighs on the [Human Connectome Projects (HCP)]((https://db.humanconnectome.org/data/projects/HCP_1200)) dataset can be downloaded from [MinD-Vis](https://github.com/zjc062/mind-vis) repository. After downloaded, put then into the ```\pretrains``` folder.
+The pre-trained weighs on the [Human Connectome Projects (HCP)]((https://db.humanconnectome.org/data/projects/HCP_1200)) dataset can be downloaded from [MinD-Vis](https://github.com/zjc062/mind-vis) repository. After downloading, put them into the ```\pretrains``` folder.
 
 For the checkpoints of fMRI reconstruction and image reconstruction, please download them from [Google Drive](xxx) (coming soon) and place them into the  ```\checkpoints``` folder.
 
@@ -86,13 +86,13 @@ All checkpoints should be organized as follows,
 ### 1. GOD Dataset
 Run ``python LEA_GOD.py`` to reconstruct images from fMRI signals and predict fMRI signals from visual stimuli.
 
-To evalute different individuals, some hyper-parameters and paths in TWO files need to be manually modified. In ```/LEA_GOD.py```,
+To evaluate different individuals, some hyper-parameters and paths in TWO files need to be manually modified. In ```/LEA_GOD.py```,
 ```python
-367 |    ckpt_encoder = 'PATH_to_encoder_ckpt' 
-368 |    ckpt_decoder = 'PATH_to_decoder_ckpt'
+367 |    ckpt_encoder = 'PATH_to_fmri_encoder_ckpt' 
+368 |    ckpt_decoder = 'PATH_to_image_decoder_ckpt'
 369 |    args.cfg_file = [
-370 |        'PATH_to_encoder_cfg',
-371 |        'PATH_to_decoder_cfg'
+370 |        'PATH_to_fmri_encoder_cfg',
+371 |        'PATH_to_image_decoder_cfg'
 372 |    ]
 ```
 
@@ -112,12 +112,12 @@ The output will be saved in
 The outputs will be stored in the ``\results`` folder of the path where the fMRI reconstruction model is located
 
 ### 2. BOLD5000 Dataset
-Run ``python LEA_BOLD.py`` for inference, which is similar to the operations on GOD dataset.
+Run ``python LEA_BOLD.py`` for inference, which is similar to the operations on the GOD dataset.
 
 ## Acknowledgments
 
 Our fMRI autoencoder implementation is based on the [MAE](https://github.com/facebookresearch/mae) and [MinD-Vis](https://github.com/zjc062/mind-vis). Our image autoencoder implementation is based on [MaskGIT](https://github.com/google-research/maskgit). 
-We extend our gratitude to the authors for their excellent work and publicly sharing codes!
+We extend our gratitude to the authors for their excellent work and for publicly sharing codes!
 
 ## Citation
 ```
