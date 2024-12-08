@@ -108,7 +108,6 @@ and in ```/configs/fMRI_TransAE_GOD.yaml```,
 26 |  sub: ['sbj_1'] # ['sbj_1', 'sbj_2', 'sbj_3', 'sbj_4', 'sbj_5']
 ```
 
-The output will be saved in 
 The outputs will be stored in the ``\results`` folder of the path where the fMRI reconstruction model is located
 
 ### 2. BOLD5000 Dataset
