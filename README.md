@@ -121,21 +121,20 @@ We extend our gratitude to the authors for their excellent work and publicly sha
 
 ## Citation
 ```
+@article{qian2024lea,
+  title={LEA: Learning Latent Embedding Alignment Model for fMRI Decoding and Encoding},
+  author={Xuelin Qian and Yikai Wang and Xinwei Sun and Yanwei Fu and Xiangyang Xue and Jianfeng Feng},
+  journal={Transactions on Machine Learning Research},
+  year={2024},
+  url={https://openreview.net/forum?id=SUMtDJqicd},  
+}
+
 @article{qian2023joint,
-  title={Joint fmri decoding and encoding with latent embedding alignment},
+  title={Joint fMRI Decoding and Encoding with Latent Embedding Alignment},
   author={Qian, Xuelin and Wang, Yikai and Fu, Yanwei and Sun, Xinwei and Xue, Xiangyang and Feng, Jianfeng},
   journal={arXiv preprint arXiv:2303.14730},
   year={2023}
 }
-
-@article{qian2024lea,
-title={LEA: Learning Latent Embedding Alignment Model for fMRI Decoding and Encoding},
-author={Xuelin Qian and Yikai Wang and Xinwei Sun and Yanwei Fu and Xiangyang Xue and Jianfeng Feng},
-journal={Transactions on Machine Learning Research},
-year={2024},
-url={https://openreview.net/forum?id=SUMtDJqicd},  
-}
-
 ```
 
 ## Contact
