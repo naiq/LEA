@@ -308,8 +308,7 @@ def create_BOLD5000_CLIP_dataset(path='../../../data/BOLD5000', patch_size=16, i
     roi_list = ['EarlyVis', 'LOC', 'OPA', 'PPA', 'RSC']
     fmri_path = os.path.join(path, 'BOLD5000_GLMsingle_ROI_betas/py')
     img_path = os.path.join(path, 'BOLD5000_Stimuli')
-    imgs_dict = np.load(os.path.join(img_path, 'Scene_Stimuli/Presented_Stimuli/img_dict_label.npy'),allow_pickle=True).item()
-    caption_dict = np.load(os.path.join(img_path, 'Scene_Stimuli/Presented_Stimuli/caption_dict.npy'),allow_pickle=True).item()
+    imgs_dict = np.load(os.path.join(img_path, 'Scene_Stimuli/Presented_Stimuli/img_dict.npy'),allow_pickle=True).item()
     repeated_imgs_list = np.loadtxt(os.path.join(img_path, 'Scene_Stimuli', 'repeated_stimuli_113_list.txt'), dtype=str)
 
     fmri_files = [f for f in os.listdir(fmri_path) if f.endswith('.npy')]
@@ -319,10 +318,6 @@ def create_BOLD5000_CLIP_dataset(path='../../../data/BOLD5000', patch_size=16, i
     fmri_test_major = []
     img_train_major = []
     img_test_major = []
-    cat_train_major = []
-    cat_test_major = []
-    cap_train_major = []
-    cap_test_major = []
 
     for sub in subjects:
         # load fmri
@@ -333,54 +328,37 @@ def create_BOLD5000_CLIP_dataset(path='../../../data/BOLD5000', patch_size=16, i
                     fmri_data_sub.append(np.load(os.path.join(fmri_path, npy)))
         fmri_data_sub = np.concatenate(fmri_data_sub, axis=-1) # concatenate all rois
         fmri_data_sub = normalize(fmri_data_sub) # [5254, 1696]
-        # fmri_data_sub = pad_to_patch_size(fmri_data_sub, patch_size) # [5254, 1696]
 
         # load image
         img_files = get_stimuli_list(img_path, sub)
         img_data_sub = [imgs_dict[name] for name in img_files] # 5254, [([256, 256, 3], cate), ([256, 256, 3], cate), ...]
-        cap_data_sub = [caption_dict[name] for name in img_files] # 5254, [['xx', 'xx', 'xx', 'xx', 'xx'], [], ...]
     
         # split train test
         test_idx = [list_get_all_index(img_files, img) for img in repeated_imgs_list]
         test_idx = [i for i in test_idx if len(i) > 0] # remove empy list for CSI4
         test_fmri = np.stack([fmri_data_sub[idx].mean(axis=0) for idx in test_idx]) # [113, 1696]
-        test_img = np.stack([img_data_sub[idx[0]][0] for idx in test_idx]) # [113, 256, 256, 3]
-        test_cat = np.stack([img_data_sub[idx[0]][1] for idx in test_idx]) # [113, 1000]
-        test_cap = [cap_data_sub[idx[0]] for idx in test_idx] # 113, [['xx', 'xx', 'xx', 'xx', 'xx'], [], ...]
+        test_img = np.stack([img_data_sub[idx[0]] for idx in test_idx]) # [113, 256, 256, 3]
 
         test_idx_flatten = []
         for idx in test_idx:
             test_idx_flatten += idx # flatten
         if include_nonavg_test: # [avg_test; nonavg_test]
             test_fmri = np.concatenate([test_fmri, fmri_data_sub[test_idx_flatten]], axis=0)
-            test_img = np.concatenate([test_img, np.stack([img_data_sub[idx][0] for idx in test_idx_flatten])], axis=0)
-            test_cat = np.concatenate([test_cat, np.stack([img_data_sub[idx][1] for idx in test_idx_flatten])], axis=0)
-            test_cap = test_cap + [cap_data_sub[idx] for idx in test_idx_flatten]
+            test_img = np.concatenate([test_img, np.stack([img_data_sub[idx] for idx in test_idx_flatten])], axis=0)
 
         train_idx = [i for i in range(len(img_files)) if i not in test_idx_flatten]
-        train_img = np.stack([img_data_sub[idx][0] for idx in train_idx]) # [4803, 256, 256, 3]
-        train_cat = np.stack([img_data_sub[idx][1] for idx in train_idx]) # [4803, 1000]
-        train_cap = [cap_data_sub[idx] for idx in train_idx] # 4803, [['xx', 'xx', 'xx', 'xx', 'xx'], [], ...]
+        train_img = np.stack([img_data_sub[idx] for idx in train_idx]) # [4803, 256, 256, 3]
         train_fmri = fmri_data_sub[train_idx] # [4803, 1696]
         
         fmri_train_major.append(train_fmri)
         fmri_test_major.append(test_fmri)
         img_train_major.append(train_img)
         img_test_major.append(test_img)
-        cat_train_major.append(train_cat)
-        cat_test_major.append(test_cat)
-        cap_train_major += train_cap
-        cap_test_major += test_cap
 
     fmri_train_major = np.concatenate(fmri_train_major, axis=0)
     fmri_test_major = np.concatenate(fmri_test_major, axis=0)
     img_train_major = np.concatenate(img_train_major, axis=0)
     img_test_major = np.concatenate(img_test_major, axis=0)
-    cat_train_major = np.concatenate(cat_train_major, axis=0)
-    cat_test_major = np.concatenate(cat_test_major, axis=0)
-
-    all_category = list(np.argmax(cat_train_major, axis=1))
-    all_category = list(set(all_category))
 
     image_transform_list = [transforms.Resize((image_size, image_size))]
     image_transform_list.append(transforms.ToTensor())
@@ -389,18 +367,15 @@ def create_BOLD5000_CLIP_dataset(path='../../../data/BOLD5000', patch_size=16, i
     image_transform = transforms.Compose(image_transform_list)
 
     num_voxels = fmri_train_major.shape[-1]
-    return (BOLD5000_CLIP_dataset(fmri_train_major, img_train_major, cat_train_major, cap_train_major, all_category, torch.FloatTensor, image_transform, num_voxels, clip_name, clip_ckpt, clip_cache, phase='test'),
-            BOLD5000_CLIP_dataset(fmri_test_major, img_test_major, cat_test_major, cap_test_major, all_category, torch.FloatTensor, image_transform, num_voxels, clip_name, clip_ckpt, clip_cache, phase='test'))
+    return (BOLD5000_CLIP_dataset(fmri_train_major, img_train_major, torch.FloatTensor, image_transform, num_voxels, clip_name, clip_ckpt, clip_cache, phase='test'),
+            BOLD5000_CLIP_dataset(fmri_test_major, img_test_major, torch.FloatTensor, image_transform, num_voxels, clip_name, clip_ckpt, clip_cache, phase='test'))
 
 
 class BOLD5000_CLIP_dataset(torch.utils.data.Dataset):
-    def __init__(self, fmri, image, category, caption, all_category, fmri_transform=identity, image_transform=identity, num_voxels=0, 
+    def __init__(self, fmri, image, fmri_transform=identity, image_transform=identity, num_voxels=0, 
                  clip_name='', clip_ckpt='', clip_cache='', phase='train'):
         self.fmri = fmri
         self.image = image
-        self.caption = caption
-        self.category = np.argmax(category, axis=1)
-        self.all_category = all_category
         self.fmri_transform = fmri_transform
         self.image_transform = image_transform
         _, train_preprocess, test_preprocess = open_clip.create_model_and_transforms(clip_name, pretrained=clip_ckpt)
@@ -414,20 +389,12 @@ class BOLD5000_CLIP_dataset(torch.utils.data.Dataset):
     def __getitem__(self, index):
         fmri = self.fmri[index]
 
-        cate = self.category[index]
-        caption = self.caption[index]
-
-        text = random.sample(caption, 1)[0]
-        # label = self.all_category.index(cate)
-        label = cate
-
         img = Image.fromarray(self.image[index])
         fmri = np.expand_dims(fmri, axis=0)
 
         return {'fmri': self.fmri_transform(fmri), 'image': self.image_transform(img), 
                 'image4clip': self.image_preprocess(img), 
-                'text': self.tokenizer([text,]), 'fmri_target': torch.FloatTensor(fmri),
-                'label': label}
+                'fmri_target': torch.FloatTensor(fmri)}
 
     def switch_sub_view(self, sub, subs):
         # Not implemented
