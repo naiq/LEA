@@ -365,7 +365,7 @@ if __name__ == '__main__':
 
     # -* fmri -> latent -> ridge img feat -> RGB *-
     ckpt_encoder = 'checkpoints/GOD_sbj2/checkpoint.pth' # PATH_to_encoder_ckpt
-    ckpt_decoder = 'checkpoints/ImageDecoder_MaskGIT/checkpoint.pth' # PATH_to_decoder_ckpt
+    ckpt_decoder = 'checkpoints/ImageDecoder_MaskGIT/checkpoint_GOD.pth' # PATH_to_decoder_ckpt
     args.cfg_file = [
         'configs/fMRI_TransAE_GOD.yaml', # PATH_to_encoder_cfg
         'configs/MaskGIT_Transformer.yaml' # PATH_to_decoder_cfg
