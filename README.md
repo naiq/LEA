@@ -113,7 +113,7 @@ The outputs will be stored in the ``/results`` folder of the path where the fMRI
 ### 2. BOLD5000 Dataset
 Run ``python LEA_BOLD.py`` for inference, which is similar to the operations on the GOD dataset.
 
-## Visualizatioins
+## Visualizations
 Qualitative results of image-fMRI-image reconstruction on CSI-1 of BOLD5000 dataset.
 <p align="center">
 <img src=assets/img-fmri-img.jpg />
