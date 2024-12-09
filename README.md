@@ -49,7 +49,7 @@ Please download the GOD and BOLD5000 datasets from [MinD-Vis](https://github.com
 ```
 
 ## Chcekpoints Download
-The pre-trained weighs on the [Human Connectome Projects (HCP)]((https://db.humanconnectome.org/data/projects/HCP_1200)) dataset can be downloaded from [MinD-Vis](https://github.com/zjc062/mind-vis) repository. After downloading, put them into the ```/pretrains``` folder.
+The pre-trained weighs on the [Human Connectome Projects (HCP)](https://db.humanconnectome.org/data/projects/HCP_1200) dataset can be downloaded from [MinD-Vis](https://github.com/zjc062/mind-vis) repository. After downloading, put them into the ```/pretrains``` folder.
 
 For the checkpoints of fMRI reconstruction and image reconstruction, please download them from [Google Drive](xxx) (coming soon) and place them into the  ```/checkpoints``` folder.
 
