@@ -68,8 +68,8 @@ All checkpoints should be organized as follows,
 ┃   ┗ 📜 checkpoint.pth
 ┣ ...
 ┣ 📂 ImageDecoder_MaskGIT
-┃   ┗ 📜 checkpoint.pth
-┃   ┗ 📜 checkpoint_v2.pth
+┃   ┗ 📜 checkpoint_GOD.pth
+┃   ┗ 📜 checkpoint_BOLD.pth
 
 /pretrains
 ┣ 📂 BOLD
