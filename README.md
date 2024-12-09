@@ -113,6 +113,10 @@ The outputs will be stored in the ``/results`` folder of the path where the fMRI
 ### 2. BOLD5000 Dataset
 Run ``python LEA_BOLD.py`` for inference, which is similar to the operations on the GOD dataset.
 
+<p align="center">
+<img src=assets/img-fmri-img.jpg />
+</p>
+
 ## Acknowledgments
 
 Our fMRI autoencoder implementation is based on the [MAE](https://github.com/facebookresearch/mae) and [MinD-Vis](https://github.com/zjc062/mind-vis). Our image autoencoder implementation is based on [MaskGIT](https://github.com/google-research/maskgit). 
